@@ -805,20 +805,8 @@ function stopRecording() {
 }
 
 async function processAudio() {
-  const blob = new Blob(audioChunks, { type: 'audio/webm' });
-  showStatus('Transcribing audio...', 'loading');
-
-  // Convert to base64
-  const base64 = await blobToBase64(blob);
-
-  // Use Web Speech API if available (free), else use Claude with audio
-  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    // Web Speech API path — re-record using recognition
-    showStatus('Use the mic button and speak clearly.', 'loading');
-  }
-
-  // We'll use Claude's audio understanding via base64
-  await transcribeWithClaude(base64, blob.type);
+  // Skip audio processing, go straight to Web Speech API
+  await fallbackToSpeechAPI();
 }
 
 async function transcribeWithClaude(audioBase64, mimeType) {
